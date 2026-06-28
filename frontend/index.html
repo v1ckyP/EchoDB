@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EchoDB — Distributed Database Simulator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="header-brand">
+        <div class="logo-mark">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="28" height="28" rx="7" fill="#1A56DB"/>
+            <ellipse cx="14" cy="10" rx="7" ry="3" stroke="white" stroke-width="1.5"/>
+            <path d="M7 10v4c0 1.657 3.134 3 7 3s7-1.343 7-3v-4" stroke="white" stroke-width="1.5"/>
+            <path d="M7 14v4c0 1.657 3.134 3 7 3s7-1.343 7-3v-4" stroke="white" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-name">EchoDB</span>
+          <span class="brand-sub">Distributed Database Simulator</span>
+        </div>
+      </div>
+      <div class="header-meta">
+        <div class="meta-time">
+          <span class="meta-label">Local Time</span>
+          <span class="meta-value" id="current-time">--:--:--</span>
+        </div>
+        <div class="divider-v"></div>
+        <div class="gateway-badge" id="gateway-badge">
+          <span class="badge-dot" id="gateway-dot"></span>
+          <span class="badge-label">Gateway</span>
+          <span class="badge-status" id="gateway-status-text">Checking…</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== MAIN LAYOUT ===== -->
+  <main class="main-layout">
+
+    <!-- ===== LEFT / CENTER COLUMN ===== -->
+    <div class="content-col">
+
+      <!-- STATUS CARDS -->
+      <section class="section" id="section-status">
+        <div class="section-header">
+          <h2 class="section-title">System Status</h2>
+          <button class="btn-ghost" id="refresh-health-btn" title="Refresh health">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M1.5 7.5a6 6 0 1 0 1.2-3.6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M1.5 3v1.5H3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Refresh
+          </button>
+        </div>
+        <div class="status-grid">
+
+          <!-- Gateway Card -->
+          <div class="status-card" id="card-gateway">
+            <div class="card-header-row">
+              <span class="card-icon card-icon--blue">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="4" width="14" height="9" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M5 4V3a3 3 0 0 1 6 0v1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="8" cy="8.5" r="1.5" fill="currentColor"/></svg>
+              </span>
+              <span class="card-label">Gateway</span>
+            </div>
+            <div class="card-status-row">
+              <span class="status-pill" id="gateway-pill">—</span>
+            </div>
+            <div class="card-detail">
+              <span class="detail-label">Active Node</span>
+              <span class="detail-value" id="gateway-active-node">—</span>
+            </div>
+          </div>
+
+          <!-- Node 1 Card -->
+          <div class="status-card" id="card-node1">
+            <div class="card-header-row">
+              <span class="card-icon card-icon--green">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.4"/><circle cx="8" cy="8" r="2.5" fill="currentColor"/></svg>
+              </span>
+              <span class="card-label">Node 1</span>
+            </div>
+            <div class="card-status-row">
+              <span class="status-pill" id="node1-pill">—</span>
+            </div>
+            <div class="card-detail">
+              <span class="detail-label">Users Served</span>
+              <span class="detail-value" id="node1-users">—</span>
+            </div>
+          </div>
+
+          <!-- Node 2 Card -->
+          <div class="status-card" id="card-node2">
+            <div class="card-header-row">
+              <span class="card-icon card-icon--green">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.4"/><circle cx="8" cy="8" r="2.5" fill="currentColor"/></svg>
+              </span>
+              <span class="card-label">Node 2</span>
+            </div>
+            <div class="card-status-row">
+              <span class="status-pill" id="node2-pill">—</span>
+            </div>
+            <div class="card-detail">
+              <span class="detail-label">Users Served</span>
+              <span class="detail-value" id="node2-users">—</span>
+            </div>
+          </div>
+
+          <!-- Node 3 Card -->
+          <div class="status-card" id="card-node3">
+            <div class="card-header-row">
+              <span class="card-icon card-icon--green">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.4"/><circle cx="8" cy="8" r="2.5" fill="currentColor"/></svg>
+              </span>
+              <span class="card-label">Node 3</span>
+            </div>
+            <div class="card-status-row">
+              <span class="status-pill" id="node3-pill">—</span>
+            </div>
+            <div class="card-detail">
+              <span class="detail-label">Users Served</span>
+              <span class="detail-value" id="node3-users">—</span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- CREATE USER FORM -->
+      <section class="section" id="section-create">
+        <div class="section-header">
+          <h2 class="section-title">Create User</h2>
+        </div>
+        <div class="form-card">
+          <div class="form-grid">
+            <div class="field-group">
+              <label class="field-label" for="f-name">Full Name</label>
+              <input class="field-input" type="text" id="f-name" placeholder="e.g. Alice Chen" autocomplete="off" />
+              <span class="field-error" id="err-name"></span>
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="f-email">Email Address</label>
+              <input class="field-input" type="email" id="f-email" placeholder="alice@example.com" autocomplete="off" />
+              <span class="field-error" id="err-email"></span>
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="f-city">City</label>
+              <input class="field-input" type="text" id="f-city" placeholder="e.g. Tokyo" autocomplete="off" />
+              <span class="field-error" id="err-city"></span>
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="f-age">Age</label>
+              <input class="field-input" type="number" id="f-age" placeholder="e.g. 28" min="1" max="120" autocomplete="off" />
+              <span class="field-error" id="err-age"></span>
+            </div>
+          </div>
+          <div class="form-footer">
+            <button class="btn-primary" id="create-user-btn">
+              <span class="btn-text">Create User</span>
+              <span class="btn-spinner" id="create-spinner" hidden>
+                <svg class="spin-icon" width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="white" stroke-width="2" stroke-dasharray="28" stroke-dashoffset="10"/></svg>
+              </span>
+            </button>
+            <button class="btn-ghost" id="reset-form-btn">Reset</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- USER TABLE -->
+      <section class="section" id="section-users">
+        <div class="section-header">
+          <h2 class="section-title">Users</h2>
+          <div class="table-controls">
+            <div class="search-wrap">
+              <svg class="search-icon" width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 10.5l2.5 2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+              <input class="search-input" type="text" id="search-input" placeholder="Search users…" />
+            </div>
+            <button class="btn-ghost" id="refresh-users-btn" title="Reload users">
+              <svg width="14" height="14" viewBox="0 0 15 15" fill="none"><path d="M1.5 7.5a6 6 0 1 0 1.2-3.6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M1.5 3v1.5H3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Reload
+            </button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="user-table" id="user-table">
+            <thead>
+              <tr>
+                <th class="col-id sortable" data-col="id">ID <span class="sort-arrow">↕</span></th>
+                <th class="sortable" data-col="name">Name <span class="sort-arrow">↕</span></th>
+                <th class="sortable" data-col="email">Email <span class="sort-arrow">↕</span></th>
+                <th class="sortable" data-col="city">City <span class="sort-arrow">↕</span></th>
+                <th class="col-age sortable" data-col="age">Age <span class="sort-arrow">↕</span></th>
+                <th>Served By</th>
+                <th class="col-actions">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="user-tbody">
+              <!-- Rows injected by JS -->
+            </tbody>
+          </table>
+          <!-- Loading state -->
+          <div class="table-overlay" id="table-loading" hidden>
+            <div class="spinner-lg"></div>
+            <span>Loading users…</span>
+          </div>
+          <!-- Empty state -->
+          <div class="table-empty" id="table-empty" hidden>
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><rect x="4" y="8" width="32" height="26" rx="4" stroke="#CBD5E1" stroke-width="2"/><path d="M4 16h32" stroke="#CBD5E1" stroke-width="2"/><path d="M13 24h14M13 29h8" stroke="#CBD5E1" stroke-width="2" stroke-linecap="round"/></svg>
+            <p>No users found</p>
+            <span>Create your first user using the form above.</span>
+          </div>
+        </div>
+        <div class="table-footer" id="table-footer">
+          <span class="row-count" id="row-count"></span>
+          <div class="pagination" id="pagination"></div>
+        </div>
+      </section>
+
+    </div><!-- /content-col -->
+
+    <!-- ===== RIGHT SIDEBAR ===== -->
+    <aside class="sidebar-col">
+
+      <!-- SYSTEM HEALTH PANEL -->
+      <div class="sidebar-card" id="health-panel">
+        <div class="sidebar-card-header">
+          <h3 class="sidebar-card-title">System Health</h3>
+          <span class="health-refresh-badge" id="health-countdown">—</span>
+        </div>
+        <div class="health-list" id="health-list">
+          <div class="health-item">
+            <span class="health-dot health-dot--pending"></span>
+            <span class="health-name">Gateway</span>
+            <span class="health-state" id="hp-gateway">Checking…</span>
+          </div>
+          <div class="health-item">
+            <span class="health-dot health-dot--pending"></span>
+            <span class="health-name">Node 1</span>
+            <span class="health-state" id="hp-node1">Checking…</span>
+          </div>
+          <div class="health-item">
+            <span class="health-dot health-dot--pending"></span>
+            <span class="health-name">Node 2</span>
+            <span class="health-state" id="hp-node2">Checking…</span>
+          </div>
+          <div class="health-item">
+            <span class="health-dot health-dot--pending"></span>
+            <span class="health-name">Node 3</span>
+            <span class="health-state" id="hp-node3">Checking…</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- LIVE REQUEST LOG -->
+      <div class="sidebar-card log-card" id="log-panel">
+        <div class="sidebar-card-header">
+          <h3 class="sidebar-card-title">Request Log</h3>
+          <button class="btn-ghost btn-ghost--xs" id="clear-log-btn">Clear</button>
+        </div>
+        <div class="log-feed" id="log-feed">
+          <p class="log-empty">No activity yet. Requests will appear here.</p>
+        </div>
+      </div>
+
+    </aside>
+
+  </main><!-- /main-layout -->
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="site-footer">
+    <span class="footer-copy">EchoDB — Distributed Database Simulator</span>
+    <span class="footer-tech">Built with HTML, CSS, JavaScript &amp; FastAPI</span>
+  </footer>
+
+  <!-- ===== EDIT MODAL ===== -->
+  <div class="modal-backdrop" id="edit-modal" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modal-title">Edit User</h3>
+        <button class="modal-close" id="modal-close-btn" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="edit-id" />
+        <div class="form-grid">
+          <div class="field-group">
+            <label class="field-label" for="edit-name">Full Name</label>
+            <input class="field-input" type="text" id="edit-name" />
+            <span class="field-error" id="edit-err-name"></span>
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="edit-email">Email Address</label>
+            <input class="field-input" type="email" id="edit-email" />
+            <span class="field-error" id="edit-err-email"></span>
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="edit-city">City</label>
+            <input class="field-input" type="text" id="edit-city" />
+            <span class="field-error" id="edit-err-city"></span>
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="edit-age">Age</label>
+            <input class="field-input" type="number" id="edit-age" min="1" max="120" />
+            <span class="field-error" id="edit-err-age"></span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-ghost" id="modal-cancel-btn">Cancel</button>
+        <button class="btn-primary" id="modal-save-btn">
+          <span class="btn-text">Save Changes</span>
+          <span class="btn-spinner" id="edit-spinner" hidden>
+            <svg class="spin-icon" width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="white" stroke-width="2" stroke-dasharray="28" stroke-dashoffset="10"/></svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== VIEW MODAL ===== -->
+  <div class="modal-backdrop" id="view-modal" hidden>
+    <div class="modal modal--sm" role="dialog" aria-modal="true" aria-labelledby="view-modal-title">
+      <div class="modal-header">
+        <h3 class="modal-title" id="view-modal-title">User Details</h3>
+        <button class="modal-close" id="view-modal-close-btn" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body" id="view-modal-body"></div>
+    </div>
+  </div>
+
+  <!-- ===== TOAST CONTAINER ===== -->
+  <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
